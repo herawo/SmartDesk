@@ -57,64 +57,64 @@ function start() {
       console.log(err)
     },
     onInit: function (res) {
-      if (res) {
+        if (res) {
 
-        console.log('GrovePi Version :: ' + board.version())
-        if (testOptions.airQuality) {
-          var airQualitySensor = new AirQualityAnalogSensor(0)
-          // Analog Port 0
-          // Air Quality Sensor
-          console.log('AirQuality Analog Sensor (start watch)')
-          airQualitySensor.on('change', function (res) {
-            console.log('AirQuality onChange value=' + res)
-          })
-          airQualitySensor.watch()
-        }
+			console.log('GrovePi Version :: ' + board.version())
+			if (testOptions.airQuality) {
+			  var airQualitySensor = new AirQualityAnalogSensor(0)
+			  // Analog Port 0
+			  // Air Quality Sensor
+			  console.log('AirQuality Analog Sensor (start watch)')
+			  airQualitySensor.on('change', function (res) {
+				console.log('AirQuality onChange value=' + res)
+			  })
+			  airQualitySensor.watch()
+			}
 
-        if (testOptions.sound) {
-          var soundSensor = new SoundAnalogSensor(1)
-          // Analog Port 1
-          // Sound Sensor
-          console.log('Sound Analog Sensor (start watch)')
-          soundSensor.on('change', function (res) {
-            console.log('Sound onChange value=' + res)
-          })
-          soundSensor.watch()
-        }
+			if (testOptions.sound) {
+			  var soundSensor = new SoundAnalogSensor(1)
+			  // Analog Port 1
+			  // Sound Sensor
+			  console.log('Sound Analog Sensor (start watch)')
+			  soundSensor.on('change', function (res) {
+				console.log('Sound onChange value=' + res)
+			  })
+			  soundSensor.watch()
+			}
 
-        if (testOptions.dhtDigital) {
-          var dhtSensor = new DHTDigitalSensor(2, DHTDigitalSensor.VERSION.DHT11, DHTDigitalSensor.CELSIUS)
-          // Digital Port 2
-          // DHT Sensor
-          console.log('DHT Digital Sensor (start watch)')
-          dhtSensor.on('change', function (res) {
-            console.log('DHT onChange value=' + res)
-          })
-          dhtSensor.watch(500) // milliseconds
-        }
+			if (testOptions.dhtDigital) {
+			  var dhtSensor = new DHTDigitalSensor(2, DHTDigitalSensor.VERSION.DHT11, DHTDigitalSensor.CELSIUS)
+			  // Digital Port 2
+			  // DHT Sensor
+			  console.log('DHT Digital Sensor (start watch)')
+			  dhtSensor.on('change', function (res) {
+				console.log('DHT onChange value=' + res)
+			  })
+			  dhtSensor.watch(500) // milliseconds
+			}
 
-        if (testOptions.loudnessAnalog) {
-          var loudnessSensor = new LoudnessAnalogSensor(2)
-          //Analog Port 2
-          // Loudness Sensor
-          console.log('Loudness Analog Sensor (start monitoring - reporting results every 10s)')
-          loudnessSensor.start()
-          setInterval(loudnessSensorGetAvgMax, 10000, loudnessSensor)
-        }
-	}
-
-    if(testOptions.uv){
-		var uvSensor = new UVAnalogSensor(1);
-	// UVSensor
-		console.log('UV Analog Sensor (start watch)')
-		readUVbatchValues(uvSensor, 0, 0, 1024);
-	}
-      } else {
-        console.log('TEST CANNOT START')
-      }
+			if (testOptions.loudnessAnalog) {
+			  var loudnessSensor = new LoudnessAnalogSensor(2)
+			  //Analog Port 2
+			  // Loudness Sensor
+			  console.log('Loudness Analog Sensor (start monitoring - reporting results every 10s)')
+			  loudnessSensor.start()
+			  setInterval(loudnessSensorGetAvgMax, 10000, loudnessSensor)
+			}
+			
+			if(testOptions.uv){
+				var uvSensor = new UVAnalogSensor(1);
+			// UVSensor
+				console.log('UV Analog Sensor (start watch)')
+				readUVbatchValues(uvSensor, 0, 0, 1024);
+			} else {
+				console.log('TEST CANNOT START')
+			}
+		}    
     }
   })
-  board.init()
+ 
+ board.init()
 }
 
 function readUVbatchValues(sensor, sum, curIter, nbIter) {
