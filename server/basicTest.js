@@ -22,9 +22,7 @@ var http = require("http");
 
 var fs = require("fs");
 
-var sound = [];
-var airquality = [];
-var temperature = [];
+
 
 
 
@@ -56,6 +54,10 @@ var testOptions = {
   uv : false
 }
 
+var sound = [];
+var airquality = [];
+var temperature = [];
+
 function start() {
   console.log('starting')
 
@@ -76,7 +78,15 @@ function start() {
           // Air Quality Sensor
           console.log('AirQuality Analog Sensor (start watch)')
           airQualitySensor.on('change', function (res) {
-            console.log('AirQuality onChange value=' + res)
+            console.log('AirQuality onChange value=' + res);
+			sound.push(res);
+				var jsonairquality = JSON.stringify(airquality);
+				fs.writeFile("./airquality.json", jsonairquality , (err) => {
+					if (err) {
+						console.error(err);
+						return;
+					};
+				});
           })
           airQualitySensor.watch()
         }
@@ -89,14 +99,13 @@ function start() {
 			soundSensor.on('change', function (res) {
 				sound.push(res);
 				var jsonsound = JSON.stringify(sound);
-				console.log(jsonsound);
-				console.log('Sound onChange value=' + res)
 				fs.writeFile("./sound.json", jsonsound , (err) => {
 					if (err) {
 						console.error(err);
 						return;
 					};
 				});
+				console.log('Sound onChange value=' + res)
 			})	
 
 			soundSensor.watch()
@@ -111,41 +120,17 @@ function start() {
           console.log('DHT Digital Sensor (start watch)')
           dhtSensor.on('change', function (res) {
             console.log('DHT onChange value=' + res)
+			sound.push(res);
+				var jsontemperature = JSON.stringify(temperature);
+				fs.writeFile("./sound.json", jsontemperature , (err) => {
+					if (err) {
+						console.error(err);
+						return;
+					};
+				});
           })
           dhtSensor.watch(500) // milliseconds
         }
-
-        if (testOptions.loudnessAnalog) {
-          var loudnessSensor = new LoudnessAnalogSensor(2)
-          //Analog Port 2
-          // Loudness Sensor
-          console.log('Loudness Analog Sensor (start monitoring - reporting results every 10s)')
-          loudnessSensor.start()
-          setInterval(loudnessSensorGetAvgMax, 10000, loudnessSensor)
-        }
-
-        if (testOptions.digitalButton) {
-          var buttonSensor = new DigitalButtonSensor(4)
-          //Digital Port 4
-          // Button sensor
-          console.log('Digital Button Sensor (start watch)')
-          buttonSensor.on('down', function (res) {
-            //res will be either singlepress or longpress
-            console.log('Button onDown, data=' + res)
-          })
-          buttonSensor.watch()
-        }
-
-        if (testOptions.dust) {
-          var dustSensor = new DustDigitalSensor(2)
-          //digital port 2
-          // Dust Digital Sensor
-          console.log('Dust Digital Sensor (start monitoring - reporting results every 30s)')
-          //we must get results every 30 seconds
-          dustSensor.start()
-          setInterval(dustSensorGetAvgMax, 30 * 1000, dustSensor)
-        }
-
 	  } else {
 		console.log('TEST CANNOT START')
 	  }
