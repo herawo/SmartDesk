@@ -19,6 +19,19 @@ var board
 var LoudnessAnalogSensorValue = '0'
 var http = require("http"); 
 
+
+var fs = require("fs");
+var fileContent = "hello";
+
+fs.writeFile("./sample.txt", fileContent, (err) => {
+    if (err) {
+        console.error(err);
+        return;
+    };
+    console.log("File has been created");
+});
+
+
 http.createServer(function (request, response) {
 	response.writeHead(200, {
 			'Content-Type' : 'text/plain'
@@ -57,64 +70,151 @@ function start() {
       console.log(err)
     },
     onInit: function (res) {
-        if (res) {
+      if (res) {
 
-			console.log('GrovePi Version :: ' + board.version())
-			if (testOptions.airQuality) {
-			  var airQualitySensor = new AirQualityAnalogSensor(0)
-			  // Analog Port 0
-			  // Air Quality Sensor
-			  console.log('AirQuality Analog Sensor (start watch)')
-			  airQualitySensor.on('change', function (res) {
-				console.log('AirQuality onChange value=' + res)
-			  })
-			  airQualitySensor.watch()
-			}
+        console.log('GrovePi Version :: ' + board.version())
 
-			if (testOptions.sound) {
-			  var soundSensor = new SoundAnalogSensor(1)
-			  // Analog Port 1
-			  // Sound Sensor
-			  console.log('Sound Analog Sensor (start watch)')
-			  soundSensor.on('change', function (res) {
-				console.log('Sound onChange value=' + res)
-			  })
-			  soundSensor.watch()
-			}
+        if (testOptions.acceleration) {
+          var accSensor = new AccelerationI2cSensor()
+          // I2C sensor doesn't need to specify a port
+          // Acc. XYZ
+          console.log('Acceleration I2C Sensor (single read) :: ' + accSensor.read())
+          console.log('Acceleration I2C Sensor (start stream - 1sec delay)')
+          accSensor.stream(1000, function (res) {
+            console.log('Acceleration stream value=' + res)
+          })
+          console.log('Acceleration I2C Sensor (start watch)')
+          accSensor.on('change', function (res) {
+            console.log('Acceleration onChange value=' + res)
+          })
+          accSensor.watch()
+        }
 
-			if (testOptions.dhtDigital) {
-			  var dhtSensor = new DHTDigitalSensor(2, DHTDigitalSensor.VERSION.DHT11, DHTDigitalSensor.CELSIUS)
-			  // Digital Port 2
-			  // DHT Sensor
-			  console.log('DHT Digital Sensor (start watch)')
-			  dhtSensor.on('change', function (res) {
-				console.log('DHT onChange value=' + res)
-			  })
-			  dhtSensor.watch(500) // milliseconds
-			}
+        if (testOptions.ultrasonic) {
+          var ultrasonicSensor = new UltrasonicDigitalSensor(3)
+          // Digital Port 3
+          // Ultrasonic Ranger
+          console.log('Ultrasonic Ranger Digital Sensor (start watch)')
+          ultrasonicSensor.on('change', function (res) {
+            console.log('Ultrasonic Ranger onChange value=' + res)
+          })
+          ultrasonicSensor.watch()
+        }
 
-			if (testOptions.loudnessAnalog) {
-			  var loudnessSensor = new LoudnessAnalogSensor(2)
-			  //Analog Port 2
-			  // Loudness Sensor
-			  console.log('Loudness Analog Sensor (start monitoring - reporting results every 10s)')
-			  loudnessSensor.start()
-			  setInterval(loudnessSensorGetAvgMax, 10000, loudnessSensor)
+        if (testOptions.airQuality) {
+          var airQualitySensor = new AirQualityAnalogSensor(0)
+          // Analog Port 0
+          // Air Quality Sensor
+          console.log('AirQuality Analog Sensor (start watch)')
+          airQualitySensor.on('change', function (res) {
+            console.log('AirQuality onChange value=' + res)
+          })
+          airQualitySensor.watch()
+        }
+
+        if (testOptions.sound) {
+          var soundSensor = new SoundAnalogSensor(1)
+          // Analog Port 1
+          // Sound Sensor
+          console.log('Sound Analog Sensor (start watch)')
+          soundSensor.on('change', function (res) {
+            console.log('Sound onChange value=' + res)
+          })
+          soundSensor.watch()
+        }
+
+        if (testOptions.dhtDigital) {
+          var dhtSensor = new DHTDigitalSensor(2, DHTDigitalSensor.VERSION.DHT11, DHTDigitalSensor.CELSIUS)
+          // Digital Port 2
+          // DHT Sensor
+          console.log('DHT Digital Sensor (start watch)')
+          dhtSensor.on('change', function (res) {
+            console.log('DHT onChange value=' + res)
+          })
+          dhtSensor.watch(500) // milliseconds
+        }
+
+        if (testOptions.lightAnalog) {
+          var lightSensor = new LightAnalogSensor(3)
+          // Analog Port 3
+          // Light Sensor
+          console.log('Light Analog Sensor (start watch)')
+          lightSensor.on('change', function (res) {
+            console.log('Light onChange value=' + res)
+          })
+          lightSensor.watch()
+        }
+
+        if (testOptions.loudnessAnalog) {
+          var loudnessSensor = new LoudnessAnalogSensor(2)
+          //Analog Port 2
+          // Loudness Sensor
+          console.log('Loudness Analog Sensor (start monitoring - reporting results every 10s)')
+          loudnessSensor.start()
+          setInterval(loudnessSensorGetAvgMax, 10000, loudnessSensor)
+        }
+
+        if (testOptions.digitalButton) {
+          var buttonSensor = new DigitalButtonSensor(4)
+          //Digital Port 4
+          // Button sensor
+          console.log('Digital Button Sensor (start watch)')
+          buttonSensor.on('down', function (res) {
+            //res will be either singlepress or longpress
+            console.log('Button onDown, data=' + res)
+          })
+          buttonSensor.watch()
+        }
+
+        if (testOptions.rotaryAngle) {
+          var rotaryAngleSensor = new RotaryAngleAnalogSensor(1)
+          //Analog Port 1
+          // Rotary Angle Sensor
+          console.log('Rotary Angle Sensor (start watch)')
+          rotaryAngleSensor.start()
+          rotaryAngleSensor.on('data', function (res) {
+            console.log('Rotary onData value=' + res)
+          })
+        }
+
+        if (testOptions.dust) {
+          var dustSensor = new DustDigitalSensor(2)
+          //digital port 2
+          // Dust Digital Sensor
+          console.log('Dust Digital Sensor (start monitoring - reporting results every 30s)')
+          //we must get results every 30 seconds
+          dustSensor.start()
+          setInterval(dustSensorGetAvgMax, 30 * 1000, dustSensor)
+        }
+
+        if (testOptions.customAccelerationReading) {
+          // Custom external reading
+          console.log('Custom external reading')
+          console.log('customAccelerationReading()::' + customAccelerationReading())
+        }
+
+		if(testOptions.led){
+			var led = new VariableColorLedSensor(5);
+			console.log("LED toggle ON");
+			if(led.write(255)) {
+				console.log('OK');
+				//led.write(0);
 			}
-			
-			if(testOptions.uv){
-				var uvSensor = new UVAnalogSensor(1);
-			// UVSensor
-				console.log('UV Analog Sensor (start watch)')
-				readUVbatchValues(uvSensor, 0, 0, 1024);
-			} else {
-				console.log('TEST CANNOT START')
-			}
-		}    
-    }
+		}
+
+        if(testOptions.uv){
+		var uvSensor = new UVAnalogSensor(1);
+		 // UVSensor
+          	console.log('UV Analog Sensor (start watch)')
+		readUVbatchValues(uvSensor, 0, 0, 1024);
+	 
+		}
+		  } else {
+			console.log('TEST CANNOT START')
+		  }
+		}
   })
- 
- board.init()
+  board.init()
 }
 
 function readUVbatchValues(sensor, sum, curIter, nbIter) {
