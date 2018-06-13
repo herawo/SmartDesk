@@ -1,0 +1,14 @@
+{
+  "name": "smartdesk",
+  "version": "1.0.0",
+  "description": "SmartDesk a projet using sensor",
+  "main": "index.js",
+  "scripts": {
+    "test": "testok"
+  },
+  "author": "Thomas Alexis Thomas Nicolas",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}
