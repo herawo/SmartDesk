@@ -83,16 +83,16 @@ function start() {
 			// Sound Sensor
 			console.log('Sound Analog Sensor (start watch)')
 			soundSensor.on('change', function (res) {
-			console.log('Sound onChange value=' + res)
+				console.log('Sound onChange value=' + res)
 			})
-			soundSensor.watch()
-			fs.writeFile("./sound.json", res, (err) => {
+			fs.writeFile("./sound.json", "" + res, (err) => {
 				if (err) {
 					console.error(err);
 					return;
 				};
-				console.log("File has been created");
 			});
+			soundSensor.watch()
+			
 
         }
 
