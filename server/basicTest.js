@@ -22,6 +22,10 @@ var http = require("http");
 
 var fs = require("fs");
 
+var sound = [];
+var airquality[];
+var temperature[];
+
 
 
 http.createServer(function (request, response) {
@@ -83,14 +87,18 @@ function start() {
 			// Sound Sensor
 			console.log('Sound Analog Sensor (start watch)')
 			soundSensor.on('change', function (res) {
+				sound.push(res);
+				var jsonsound = JSON.stringify(sound);
+				console.log(jsonsound);
 				console.log('Sound onChange value=' + res)
-			})
-			fs.writeFile("./sound.json", "" + res, (err) => {
-				if (err) {
-					console.error(err);
-					return;
-				};
-			});
+				fs.writeFile("./sound.json", jsonsound , (err) => {
+					if (err) {
+						console.error(err);
+						return;
+					};
+				});
+			})	
+
 			soundSensor.watch()
 			
 
