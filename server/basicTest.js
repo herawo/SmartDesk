@@ -86,7 +86,7 @@ function start() {
 			console.log('Sound onChange value=' + res)
 			})
 			soundSensor.watch()
-			fs.writeFile("./sound.json", fileContent, (err) => {
+			fs.writeFile("./sound.json", res, (err) => {
 				if (err) {
 					console.error(err);
 					return;
