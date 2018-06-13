@@ -23,8 +23,8 @@ var http = require("http");
 var fs = require("fs");
 
 var sound = [];
-var airquality[];
-var temperature[];
+var airquality = [];
+var temperature = [];
 
 
 
