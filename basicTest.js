@@ -19,6 +19,19 @@ var board
 var LoudnessAnalogSensorValue = '0'
 var http = require("http"); 
 
+
+var fs = require("fs");
+var fileContent = "hello";
+
+fs.writeFile("./sample.txt", fileContent, (err) => {
+    if (err) {
+        console.error(err);
+        return;
+    };
+    console.log("File has been created");
+});
+
+
 http.createServer(function (request, response) {
 	response.writeHead(200, {
 			'Content-Type' : 'text/plain'
@@ -180,30 +193,26 @@ function start() {
           console.log('customAccelerationReading()::' + customAccelerationReading())
         }
 
-	if(testOptions.led){
-		var led = new VariableColorLedSensor(5);
-		console.log("LED toggle ON");
-		if(led.write(255)) {
-			console.log('OK');
-			//led.write(0);
+		if(testOptions.led){
+			var led = new VariableColorLedSensor(5);
+			console.log("LED toggle ON");
+			if(led.write(255)) {
+				console.log('OK');
+				//led.write(0);
+			}
 		}
-	}
 
         if(testOptions.uv){
 		var uvSensor = new UVAnalogSensor(1);
 		 // UVSensor
           	console.log('UV Analog Sensor (start watch)')
 		readUVbatchValues(uvSensor, 0, 0, 1024);
- 
-//on('change', function (res) {
-           	// console.log('UV Value  onChange value=' + res)
-         //	 })
-          	//uvAnalogSensor.watch()
-	}
-      } else {
-        console.log('TEST CANNOT START')
-      }
-    }
+	 
+		}
+		  } else {
+			console.log('TEST CANNOT START')
+		  }
+		}
   })
   board.init()
 }
