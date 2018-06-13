@@ -79,7 +79,7 @@ function start() {
           console.log('AirQuality Analog Sensor (start watch)')
           airQualitySensor.on('change', function (res) {
             console.log('AirQuality onChange value=' + res);
-			sound.push(res);
+				airquality.push(res);
 				var jsonairquality = JSON.stringify(airquality);
 				fs.writeFile("./airquality.json", jsonairquality , (err) => {
 					if (err) {
@@ -120,9 +120,9 @@ function start() {
           console.log('DHT Digital Sensor (start watch)')
           dhtSensor.on('change', function (res) {
             console.log('DHT onChange value=' + res)
-			sound.push(res);
+				temperature.push(res);
 				var jsontemperature = JSON.stringify(temperature);
-				fs.writeFile("./sound.json", jsontemperature , (err) => {
+				fs.writeFile("./temperature.json", jsontemperature , (err) => {
 					if (err) {
 						console.error(err);
 						return;
